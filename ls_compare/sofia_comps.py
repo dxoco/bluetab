@@ -10,45 +10,67 @@ from htbuilder.funcs import rgba, rgb
 #st.set_page_config(layout="wide")
 
 #input data obtained from Sofia website
-sofia_table = st.text_input("Ingresa campos de Sofia")
+sofia_table = st.empty()
+input_1 = sofia_table.text_input("Ingresa campos de Sofia")
 #split sofia input by "space" and then search for underscore
-sofia_table_split = sofia_table.split(" ")
+sofia_table_split = input_1.split(" ")
 #if underscore is present then it is added to list "sofia_item_list"
 sofia_item_list = [word for word in sofia_table_split if "_" in word]
 #print length of sofia_item_list which is the number of fields
 st.write("Cantidad de elementos: {}".format(len(sofia_item_list)))
-
+#button to clear field
+clear_sofia = st.button("Limpiar sofia", key=1)
+if clear_sofia:
+    input_1 = sofia_table.text_input("Ingresa campos de Sofia", value=' ', key=1)
 
 #input list of fields obtained from PR
-pr_lista = st.text_input("Ingresa campos de la PR")
-no_space_colons = pr_lista.replace(" ","").replace('"','')
+pr_lista = st.empty()
+input_2 = pr_lista.text_input("Ingresa campos de la PR")
+no_space_colons = input_2.replace(" ","").replace('"','')
 pr_item_list = no_space_colons.split(",")
+#print length of sofia_item_list which is the number of fields
+st.write("Cantidad de elementos: {}".format(len(pr_item_list)))
+#button to clear field
+clear_cubeta = st.button("Limpiar cubeta", key=2)
+if clear_cubeta:
+    input_2 = pr_lista.text_input("Ingresa campos de la PR", value=' ', key=2)
+
 
 #button to show filtered sofia contents
 if st.button("Mostrar elementos de Sofia"):
     if st.button("Ocultar elementos de Sofia"):
         pass
-    st.write(pr_item_list)
+    st.write(sofia_item_list)
     
 #button to show filtered pull request contents
 if st.button("Mostrar elementos de Pull Request"):
     if st.button("Ocultar elementos de Pull Request"):
         pass
-    st.write(sofia_item_list)
+    st.write(pr_item_list)
 
 #button to compare both lists
+i_lst = []
 if st.button("Comparar listas"):
     if st.button("Ocultar comparación"):
         pass
     else:
-        st.write("Parece que los soguientes elementos de la PR no están en Sofia:")
         for i in pr_item_list:
             if i not in sofia_item_list:
-                st.markdown("**{}**".format(i))
+                i_lst.append(i)
+        if len(i_lst) < 1:
+            st.write("Elementos de la PR encontrados en Sofia.")
+        else:
+            st.write("Parece que los soguientes elementos de la PR no están en Sofia:")
+            for i in pr_item_list:
+                if i not in sofia_item_list:
+                    st.markdown("**{}**".format(i))
 
+#---------------#
+#   Important   #
+#---------------#
 
-
-
+#how to clear field code came from:
+# https://discuss.streamlit.io/t/how-to-overwrite-the-value-user-input/7771/2
 
 #footer code obtained from:
 # https://discuss.streamlit.io/t/st-footer/6447
